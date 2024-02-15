@@ -5,14 +5,16 @@ import { useReadContract, useContractReads, useChainId } from 'wagmi';
 import { abi } from './constants/abi/TicketTracker.json';
 import { networkConfig } from './constants';
 import { Card } from 'flowbite-react';
-import { formatUnits } from 'viem'
+import { formatUnits } from 'viem';
+import { SeatModal } from './components/Modal/SeatModal';
 
 function App() {
   const chainId = useChainId()
-  console.log("chain id", chainId)
-  
-  const [ticketTracer, setTokenMaster] = useState(null)
-  const [toggle, setToggle] = useState(false)
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedOccasion, setSelectedOccasion] = useState("");
+  const [selectedOccasionsId, setSelectedOccasionsId] = useState(0);
+  const [selectedCost, setSelectedCost] = useState(0.0);
 
   //desired chain id: import.meta.env.VITE_CHAIN_ID
 
@@ -40,9 +42,7 @@ function App() {
   occasionsData = occasionsData?.map((d)=>{
     return d?.result
   })
-
   console.log(occasionsData)
-
 
   return (
     <>
@@ -99,7 +99,17 @@ function App() {
                         <span className="text-gray-700">ETH</span>
                       </div>
 
-                      <button className={`w-1/6 mx-2 text-white px-2 py-2 rounded-md ${Number(o?.tickets) ===0 ? 'bg-red-600': 'bg-blue-600'}`}>
+                      <button className={`w-1/6 mx-2 text-white px-2 py-2 rounded-md ${Number(o?.tickets) ===0 ? 'bg-red-600': 'bg-blue-600'}`}
+                      onClick={() => {
+                        if(Number(o?.tickets) !== 0){
+                            setOpenModal(true)
+                            setSelectedOccasion(o?.name)
+                            setSelectedOccasionsId(Number(o?.id))
+                            setSelectedCost(Number(formatUnits(o?.cost, 18)))
+                          }
+                        }
+                      }
+                      >
                         {Number(o?.tickets) ===0 ? "Sold Out" : "View Seats"}
                       </button>
 
@@ -111,6 +121,11 @@ function App() {
           }
           </div>
 
+          <SeatModal openModal={openModal} setOpenModal={setOpenModal} 
+            occasion={selectedOccasion}
+            occasionId={selectedOccasionsId}
+            cost={selectedCost}
+          />
         </div>
     </>
   )
