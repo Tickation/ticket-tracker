@@ -10,9 +10,6 @@ export const ConnectWalletButton = () => {
     const { connect } = useConnect()
     const { disconnect } = useDisconnect()
 
-    console.log("connected: ", status === 'connected')
-
-
     const handleConnect = async () => {
         if (status === 'connected') {
             disconnect()

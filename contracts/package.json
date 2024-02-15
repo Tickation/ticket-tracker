@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploylocal":"forge create --rpc-url localhost:8545 --private-key $(grep PRIVATE_KEY .env | cut -d '=' -f2) src/TicketTracker.sol:TicketTracker --constructor-args 'SOMEEVENT' 'SEV'"
+    "deploylocal":"forge create --rpc-url http://localhost:8545 --private-key $(grep PRIVATE_KEY .env | cut -d '=' -f2) src/TicketTracker.sol:TicketTracker --constructor-args 'SOMEEVENT' 'SEV'",
+    "scriptdeploy":"forge script script/TicketTracker.s.sol:TicketTrackerScript --rpc-url http://localhost:8545 --broadcast"
   },
   "keywords": [],
   "author": "",
