@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Navbar } from './components/Navbar';
+import { Selectors } from './components/Selectors/Selectors';
 
 
 function App() {
 
   return (
     <>
-      <div>
+      <div className="flex flex-col">
         <div className="flex flex-col">
           <Navbar/>
           <div className="bg-yellow-600">
@@ -16,7 +17,11 @@ function App() {
               </div>
             </div>
         </div>
-        Henlos
+
+
+          {/* selectors */}
+          <Selectors/>
+          
         </div>
     </>
   )
