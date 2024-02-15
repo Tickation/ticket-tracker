@@ -1,0 +1,13 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploylocal":"forge create --rpc-url localhost:8545 --private-key $(grep PRIVATE_KEY .env | cut -d '=' -f2) src/TicketTracker.sol:TicketTracker --constructor-args 'SOMEEVENT' 'SEV'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
