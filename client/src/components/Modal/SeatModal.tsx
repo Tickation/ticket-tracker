@@ -4,7 +4,9 @@ import type { CustomFlowbiteTheme } from 'flowbite-react';
 import { abi } from '../../constants/abi/TicketTracker.json';
 import { networkConfig } from '../../constants';
 import { useReadContract, useChainId, useWriteContract } from 'wagmi';
-import { parseEther } from 'viem'
+import { parseEther } from 'viem';
+import { writeContract } from '@wagmi/core';
+import { wagmiConfig } from '../../constants';
 
 const customTheme: CustomFlowbiteTheme = {
     modal: {
@@ -29,14 +31,16 @@ export const SeatModal = ({
     setOpenModal,
     occasion,
     occasionId,
-    cost
+    cost,
+    maxSeats
     }:
     {
         openModal: boolean,
         setOpenModal: (open: boolean) => void,
         occasion: string,
         occasionId: number,
-        cost: number
+        cost: number,
+        maxSeats: number
     }) => {
     const chainId = useChainId()
         //console.log("occasionId: ", occasionId)
@@ -45,18 +49,23 @@ export const SeatModal = ({
         address: networkConfig?.chainId[chainId]?.ticketMasterAddress as `0x${string}`,
         functionName: 'getSeatsTaken',
         args:[occasionId]
-    })?.data as number[]
+    })?.data as bigint[]
 
-    console.log("seatsTaken: ")
-    console.log(seatsTaken)
+    // console.log("seatsTaken: ")
+    // console.log(seatsTaken)
 
-    console.log(networkConfig?.chainId[chainId]?.ticketMasterAddress)
+    // console.log(networkConfig?.chainId[chainId]?.ticketMasterAddress)
 
-    const { writeContract: writeMintTicket } = useWriteContract({
-        address: networkConfig?.chainId[chainId]?.ticketMasterAddress as `0x${string}`,
-        abi,
-        functionName: 'mint'
-    })
+    const { writeContract: writeMintTicket } = useWriteContract()
+    const handleMint = async (id:number, seatNumber:number, ticketCost:string) => {
+        await writeContract(wagmiConfig, {
+            address: networkConfig?.chainId[chainId]?.ticketMasterAddress as `0x${string}`,
+            abi,
+            functionName: 'mint',
+            args:[id, seatNumber],
+            value: parseEther(ticketCost)
+        })
+    }
 
     return (
         <Flowbite theme={{ theme: customTheme }}>
@@ -86,8 +95,10 @@ export const SeatModal = ({
 
                                 Array(25).fill(0).map((_, i) => {
                                     return (
-                                        <div key={i} className={`
-                                        ${seatsTaken?.includes(i+1) ? "bg-gray-600" :
+                                        <button key={i} className={`
+                                        ${(seatsTaken?.includes(
+                                            BigInt(i+1)
+                                            ) || (i+1) > maxSeats )? "bg-gray-600" :
                                             "bg-green-600"} 
                                         rounded-full
                                         w-8 h-8 text-white
@@ -96,13 +107,13 @@ export const SeatModal = ({
                                         m-0`}
                                         
                                         onClick={() => {
-                                            console.log("buying...")
-                                            console.log(writeMintTicket({
-                                                args: [occasionId, i+1],
-                                                value: parseEther(cost.toString())
-                                            }))
+                                            //console.log(i+1)
+                                            handleMint(
+                                                occasionId,
+                                                i+1,
+                                                cost.toString())
                                         }}
-                                        >{i+1}</div>
+                                        >{i+1}</button>
                                     )
                                 }
                                 )
@@ -124,24 +135,26 @@ export const SeatModal = ({
                             <div className="w-full h-fit
                             grid grid-cols-12 justify-center items-center gap-1
                             "
-                            onClick={() => {
-                                writeMintTicket({
-                                    args: [occasionId, i+26],
-                                    value: parseEther(cost.toString())
-                                })
-                            }}
                             >
                             {
                                 Array(156).fill(0).map((_, i) => {
                                     return (
-                                        <div key={i} className={`
-                                        ${seatsTaken?.includes(i+26) ? "bg-gray-600" :
+                                        <button key={i} className={`
+                                        ${(seatsTaken?.includes(
+                                            BigInt(i+26)) || (i+26) > maxSeats )? "bg-gray-600" :
                                             "bg-green-600"} 
                                         rounded-full
                                         w-8 h-8 text-white
                                         flex justify-center items-center
                                         border border-gray-800
-                                        m-0`}>{i+26}</div>
+                                        m-0`}
+                                        onClick={() => {
+                                            handleMint(
+                                                occasionId,
+                                                i+26,
+                                                cost.toString())
+                                        }}
+                                        >{i+26}</button>
                                     )
                                 }
                                 )
@@ -162,25 +175,26 @@ export const SeatModal = ({
                             grid grid-cols-5 gap-1
                             flex-col justify-center items-center
                             p-1"
-                            onClick={() => {
-                                writeMintTicket({
-                                    args: [occasionId, i+182],
-                                    value: parseEther(cost.toString())
-                                })
-                            }}
                             >
                             {
 
                                 Array(25).fill(0).map((_, i) => {
                                     return (
-                                        <div key={i} className={`
-                                        ${seatsTaken?.includes(i+182) ? "bg-gray-600" :
+                                        <button key={i} className={`
+                                        ${ (seatsTaken?.includes(BigInt(i+182)) || (i+182) > maxSeats )? "bg-gray-600" :
                                             "bg-green-600"} 
                                         rounded-full
                                         w-8 h-8 text-white
                                         flex justify-center items-center
                                         border border-gray-800
-                                        m-0`}>{i+182}</div>
+                                        m-0`}
+                                        onClick={()=>{
+                                            handleMint(
+                                                occasionId,
+                                                i+182,
+                                                cost.toString())
+                                        }}
+                                        >{i+182}</button>
                                     )
                                 }
                                 )

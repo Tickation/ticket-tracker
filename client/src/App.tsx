@@ -15,6 +15,7 @@ function App() {
   const [selectedOccasion, setSelectedOccasion] = useState("");
   const [selectedOccasionsId, setSelectedOccasionsId] = useState(0);
   const [selectedCost, setSelectedCost] = useState(0.0);
+  const [maxSeats, setMaxSeats] = useState(0);
 
   //desired chain id: import.meta.env.VITE_CHAIN_ID
 
@@ -42,7 +43,7 @@ function App() {
   occasionsData = occasionsData?.map((d)=>{
     return d?.result
   })
-  console.log(occasionsData)
+  //console.log(occasionsData)
 
   return (
     <>
@@ -106,6 +107,7 @@ function App() {
                             setSelectedOccasion(o?.name)
                             setSelectedOccasionsId(Number(o?.id))
                             setSelectedCost(Number(formatUnits(o?.cost, 18)))
+                            setMaxSeats(Number(o?.tickets))
                           }
                         }
                       }
@@ -125,6 +127,7 @@ function App() {
             occasion={selectedOccasion}
             occasionId={selectedOccasionsId}
             cost={selectedCost}
+            maxSeats={maxSeats}
           />
         </div>
     </>
