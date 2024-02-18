@@ -72,7 +72,7 @@ export const SeatModal = ({
             <Modal show={openModal} onClose={() => setOpenModal(false)} 
                     size="7xl">
                 <Modal.Header>
-                    {occasion}
+                    {occasion} (ticket cost: {cost.toFixed(2)} ETH)
                 </Modal.Header>
                 <Modal.Body>
                     <div className="text-white text-sm flex justify-center items-center

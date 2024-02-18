@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploylocal":"forge create --rpc-url http://localhost:8545 --private-key $(grep PRIVATE_KEY .env | cut -d '=' -f2) src/TicketTracker.sol:TicketTracker --constructor-args 'SOMEEVENT' 'SEV'",
-    "scriptdeploy":"forge script script/TicketTracker.s.sol:TicketTrackerScript --rpc-url http://localhost:8545 --broadcast"
+    "scriptdeploy":"forge script script/TicketTracker.s.sol:TicketTrackerScript --rpc-url http://localhost:8545 --broadcast",
+    "scriptsepolia":"forge script script/TicketTracker.s.sol:TicketTrackerScript --rpc-url $(grep SEPOLIARPC_URL .env | cut -d '=' -f2) --broadcast",
+    "scriptblastsepolia":"forge script script/TicketTracker.s.sol:TicketTrackerScript --rpc-url https://sepolia.blast.io --broadcast"
   },
   "keywords": [],
   "author": "",

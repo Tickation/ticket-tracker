@@ -37,7 +37,7 @@ function App() {
     })
   
   let { data: occasionsData, isError, isLoading } = useContractReads({
-    contracts: [...occasionsCalls]
+    contracts: occasionsCalls
   })
 
   occasionsData = occasionsData?.map((d)=>{

@@ -26,7 +26,7 @@ contract TicketTrackerScript is Script {
 
         machine.addOccation(
             "ETH Tokyo",
-            1*10**18,
+            1*10**16,
             125,
             "Jun 2",
             "1:00PM JST",
